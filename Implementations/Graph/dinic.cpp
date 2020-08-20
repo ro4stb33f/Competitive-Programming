@@ -1,3 +1,4 @@
+//checked: https://cses.fi/problemset/task/1694, https://codeforces.com/contest/1360/problem/G
 struct Dinic{
 	int n, s, t;
 	struct Edge{
