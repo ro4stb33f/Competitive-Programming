@@ -1,0 +1,58 @@
+//checked: https://codeforces.com/contest/1182/problem/E
+struct matrix{
+	int n,m;
+	vector<vector<ll>> mat;
+	matrix(int x, int y): n(x), m(y)
+	{
+		mat.resize(n, vector<ll>(m));
+	}
+	friend matrix& operator+=(matrix& a, const matrix& b)
+	{
+		assert(a.n == b.n && a.m == b.m);
+		for (int q = 0; q < a.n; q++)
+		{
+			for (int w = 0; w < a.m; w++)
+			{
+				a.mat[q][w] += b.mat[q][w];
+			}
+		}
+	}
+	friend matrix& operator-=(matrix& a, const matrix& b)
+	{
+		assert(a.n == b.n && a.m == b.m);
+		for (int q = 0; q < a.n; q++)
+		{
+			for (int w = 0; w < a.m; w++)
+			{
+				a.mat[q][w] -= b.mat[q][w];
+			}
+		}
+	}
+	friend matrix operator*(const matrix& a, const matrix& b)
+	{
+		assert(a.m == b.n);
+		matrix ret(a.n, b.m);
+		for (int q = 0; q < a.n; q++)
+		{
+			for (int w = 0; w < b.m; w++)
+			{
+				for (int e = 0; e < a.m; e++)
+				{
+					ret.mat[q][w] += a.mat[q][e]*b.mat[e][w];
+				}
+			}
+		}
+		return ret;
+	}
+	friend matrix operator+(matrix a, const matrix& b) {return a+=b;}
+	friend matrix operator-(matrix a, const matrix& b) {return a-=b;}
+	friend matrix& operator*=(matrix& a, matrix& b) {return a=a*b;}
+};
+matrix pow(matrix a, ll b)
+{
+	assert(a.n == a.m);
+	matrix ret(a.n,a.n);
+	for (int q = 0; q < a.n; q++) ret.mat[q][q] = 1;
+	for (; b > 0; b/=2, a*=a) if (b&1) ret*=a;
+	return ret;
+}
