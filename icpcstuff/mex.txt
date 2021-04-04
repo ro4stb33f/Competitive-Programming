@@ -1,0 +1,12 @@
+int mex(vector<int> &v) {
+	if (SZ(v) == 0) return 0;
+	sort(v.begin(), v.end());
+	v.resize(unique(v.begin(), v.end()) - v.begin());
+	int lo = -1, hi = SZ(v);
+	while (hi - lo > 1) {
+		int m = (lo+hi)/2;
+		if (v[m] == m) lo = m;
+		else hi = m;
+	}
+	return lo+1;
+}

@@ -1,0 +1,21 @@
+struct Trie {
+	vector<array<int,2>> nxt; vector<int> sz; int en = 0;
+	Trie(int x) : nxt(x), sz(x) {}
+	void update(int x, int ct) { //change ct for add/remove 
+		int cur = 0; sz[cur] += ct;
+		for (int q = lg; q >= 0; q--) {
+			int t = (x>>q)&1;
+			if (!nxt[cur][t]) nxt[cur][t] = ++en;
+			sz[cur=nxt[cur][t]] += ct;
+		}
+	}
+	int contains(int x) {
+		int cur = 0;
+		for (int q = lg; q >= 0; q--) {
+			int t = (x>>q)&1;
+			if (!nxt[cur][t]) return 0;
+			cur = nxt[cur][t];
+		}
+		return sz[cur];
+	}
+};

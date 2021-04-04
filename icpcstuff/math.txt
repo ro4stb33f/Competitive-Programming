@@ -1,0 +1,39 @@
+const ll B = (ll)1e4;
+ll mult(ll x, ll y, ll mod) { //recursive modpow
+	if (y == 0) return 0;
+	return (mult(x, y / B, mod) * B + x * (y % B)) % mod;
+}
+ll mul(ll a, ll b, ll m) { //calculates (a*b)%m, use when m > 10^9, additional log factor
+	ll base = 1;
+	while (base * 10 <= b) {
+		base *= 10;
+	}
+ 
+	ll res = 0;
+	while (base) {
+		res = (res * 10 + (a * (b / base))) % m;
+		b %= base;
+		base /= 10;
+	}
+	return res;
+}
+ll qpow(ll a, ll b) {
+	a %= md;
+	ll ret = 1;
+	for (; b > 0; a = (a*a)%md, b >>= 1) {
+		if (b&1) ret = (ret*a)%md;
+	}
+	return ret;
+}
+ll fact[mx], ifact[mx];
+void prepare_factorial() {
+	fact[0] = ifact[0] = 1;
+	for (int q = 1; q < mx; q++) {
+		fact[q] = (fact[q-1]*q)%md;
+		ifact[q] = qpow(fact[q], md-2);
+	}
+}
+ll choose(ll a, ll b) {
+	if (b < 0 || a < 0 || b > a) return 0;
+	return (((fact[a]*ifact[b])%md)*ifact[a-b])%md;
+}

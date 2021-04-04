@@ -1,0 +1,26 @@
+vector<ll> primefactors(ll n) {
+	vector<ll> f;
+	for (ll q = 2; q*q <= n; q++) {
+		while (n%q == 0) {
+			f.push_back(q);
+			n /= q;
+		}
+	}
+	if (n > 1) f.push_back(n);
+	return f;
+}
+vector<pair<ll,ll>> factorize(ll m) {
+	vector<pair<ll,ll>> res;
+	for (ll y = 2; y * y <= m; y++) {
+		if (m % y) continue;
+		res.push_back(make_pair(y, 0LL));
+		while(m % y == 0) {
+			res.back().second++;
+			m /= y;
+		}
+	}
+	if (m > 1) {
+		res.push_back(make_pair(m, 1LL));
+	}
+	return res;
+}

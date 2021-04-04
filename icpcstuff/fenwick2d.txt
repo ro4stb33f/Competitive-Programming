@@ -1,0 +1,23 @@
+struct fenwick2d {
+	int n;
+	vector<vector<ll>> v;
+	fenwick2d(int x) : n(x) {
+		v.resize(n+1, vector<ll>(n+1));
+	}
+	void update(int x, int y, int ll) {
+		for (;x <= n; x += (x&-x)) {
+			for (int y1 = y; y1 <= n; y1 += (y1 & -y1)) {
+				v[x][y1] += inc;
+			}
+		}
+	}
+	ll get(int x, int y) {
+		ll tot = 0;
+		for (; x >= 1; x -= (x & -x)) {
+			for (int y1 = y; y1 >= 1; y1 -= (y1 & -y1)) {
+				tot += v[x][y1];
+			}
+		}
+		return tot;
+	}
+};

@@ -1,0 +1,16 @@
+int inf = 100000;
+vector<vector<int>> dist(n+5, vector<int>(n+5, inf));
+for (int q = 0; q < n; q++) dist[q][q] = 0;
+for (int q = 0; q < n; q++) {
+	for (int w = 0; w < n; w++) {
+		if (q != w && adj[q][w] > 0) dist[q][w] = adj[q][w];
+	}
+}
+for (int q = 0; q < n; q++) {
+	for (int w = 0; w < n; w++) {
+		for (int e = 0; e < n; e++) {
+			if (dist[w][q]+dist[q][e] < dist[w][e]) dist[w][e] = dist[w][q]+dist[q][e];
+		}
+	}
+}
+

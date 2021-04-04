@@ -1,0 +1,20 @@
+ll euclid(ll a, ll b, ll &x, ll &y) { //finds x,y s.t. ax+by=gcd(a,b)
+	if (b == 0) {
+		x = 1; y = 0;
+		return a;
+	}
+	ll g = euclid(b, a%b, y, x);
+	y -= a/b * x;
+	return g;
+}
+
+ll crt(ll a, ll m, ll b, ll n) { // finds x s.t. x=a%m=b%n 
+	if (n > m) {
+		swap(n,m);
+		swap(a,b);
+	}
+	ll x,y,g = euclid(m,n,x,y);
+	assert((a-b)%g == 0);
+	x = (b-a) % n * x % n / g * m + a;
+	return x<0 ? x+m*n/g : x;
+}

@@ -1,0 +1,29 @@
+//O(n^2)
+vector<int> kth_permutation(int n, ll k) {
+	vector<int> ret;
+	vector<bool> used(n+1);
+	for (int q = 1; q <= n; q++) {
+		if (q == n) {
+			for (int w = 1; w <= n; w++) {
+				if (!used[w]) ret.push_back(w);
+			}
+		} else {
+			ll fact = 1;
+			for (ll w = n-q; w >= 1; w--) fact *= w;
+			ll xy = k%(fact*(n-q+1));
+			if (xy == 0) xy+=fact*(n-q+1);
+			ll num = (fact+xy-1)/fact;
+			for (int w = 1; w <= n; w++) {
+				if (!used[w]) {
+					num--;
+					if (num == 0) {
+						ret.push_back(w);
+						used[w] = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return ret;
+}

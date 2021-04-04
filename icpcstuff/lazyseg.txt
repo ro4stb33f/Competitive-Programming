@@ -1,0 +1,46 @@
+struct lazyseg { //range add, query max
+	typedef long long T;
+	struct node {
+		T val, lazy;
+	};
+	vector<node> st;
+	lazyseg(int n): st(4*n+10) {}
+	void push(int k, int l, int r) {
+		if (l != r) {
+			st[2*k].lazy += st[k].lazy;
+			st[2*k+1].lazy += st[k].lazy;
+		}
+		st[k].val += st[k].lazy;
+		st[k].lazy = 0;
+	}
+	void update(int a, int b, int k, int l, int r, T inc) {
+		push(k,l,r);
+		if (a > r ||  b < l) return;
+		if (a <= l && r <= b) {
+			st[k].lazy = inc;
+			push(k,l,r);
+			return;
+		}
+		int m = (l+r)/2;
+		update(a,b,2*k,l,m,inc);
+		update(a,b,2*k+1,m+1,r,inc);
+		st[k].val = max(st[2*k].val, st[2*k+1].val); //modify
+	}
+	ll get(int a, int b, int k, int l, int r) {
+		push(k,l,r);
+		if (a > r || b < l) return LLONG_MIN; //modify
+		if (a <= l && r <= b) return st[k].val;
+		int m = (l+r)/2;
+		return max(get(a,b,2*k,l,m), get(a,b,2*k+1,m+1,r)); //modify
+	}
+	void build(vector<T> &v, int k, int l, int r) {
+		if (l == r) {
+			st[k].val = v[l];
+			return;
+		}
+		int m = (l+r)/2;
+		build(v,2*k,l,m);
+		build(v,2*k+1,m+1,r);
+		st[k].val = max(st[2*k].val, st[2*k+1].val); //modify
+	}
+};

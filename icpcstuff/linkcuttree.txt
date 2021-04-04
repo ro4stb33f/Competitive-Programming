@@ -1,0 +1,62 @@
+struct linkcut {
+	vector<int> fa, sum, rev;
+	vector<array<int,2>> ch;
+	linkcut(int n) : fa(n), sum(n), ch(n), rev(n) {}
+	bool isroot(int x) {
+		return ch[fa[x]][0] != x && ch[fa[x]][1] != x;
+	}
+	void pushup(int x) {
+		sum[x] = sum[ch[x][0]]+sum[ch[x][1]]+val[x];
+	}
+	void pushdown(int x) {
+		if (rev[x]) {
+			rev[ch[x][0]] ^= 1;
+			rev[ch[x][1]] ^= 1;
+			swap(ch[x][0],ch[x][1]);
+			rev[x] = 0;
+		}
+	}
+	void pushlazy(int x) {
+		if (!isroot(x)) pushlazy(fa[x]);
+		pushdown(x);
+	}
+	int child(int x) {
+		return ch[fa[x]][1] == x;
+	}
+	void rotate(int x) {
+		if (isroot(x)) return;
+		int y = fa[x], z = fa[y], l = child(x), r = l^1;
+		if (!isroot(y)) ch[z][child(y)] = x;
+		fa[x] = z; fa[y] = x; fa[ch[x][r]] = y;
+		ch[y][l] = ch[x][r]; ch[x][r] = y;
+		pushup(y); pushup(x);
+	}
+	void splay(int x) {
+		pushlazy(x);
+		for (int y = fa[x]; !isroot(x); rotate(x), y = fa[x]) {
+			if (!isroot(y)) rotate((child(x)^child(y)) ? x : y);
+		}
+	}
+	void access(int x) {
+		for (int y = 0; x; y = x, x = fa[x]) {
+			splay(x);
+			ch[x][1] = y;
+			pushup(x);
+		}
+	}
+	void makeroot(int x) {
+		access(x);
+		splay(x);
+		rev[x] ^= 1;
+	}
+	void link(int x, int y) {
+		makeroot(x);
+		fa[x] = y;
+	}
+	void cut(int x, int y) {
+		makeroot(x);
+		access(y);
+		splay(y);
+		fa[x] = ch[y][0] = 0;
+	}
+};

@@ -1,0 +1,45 @@
+int mx = 1e5+5, lg = 20;
+vector<int> adj[mx];
+int jump[mx][lg], depth[mx];
+void dfs_lca(int v, int p)
+{
+	for (int a : adj[v]) {
+		if (a == p) continue;
+		jump[a][0] = v;
+		depth[a] = depth[v]+1;
+		dfs_lca(a,v);
+	}
+}
+void prepare_lca()
+{
+	for (int w = 1; w < lg; w++) {
+		for (int q = 1; q < mx; q++) {
+			jump[q][w] = jump[jump[q][w-1]][w-1];
+		}
+	}
+}
+int lift(int v, int x)
+{
+	for (int q = 0; q < lg; q++) {
+		if ((x&(1<<q)) > 0) v = jump[v][q];
+	}
+	return v;
+}
+int lca(int a, int b)
+{
+	if (depth[a] < depth[b]) swap(a,b);
+	a = lift(a, depth[a]-depth[b]);
+	if (a == b) return a;
+	for (int q = lg-1; q >= 0; q--) {
+		if (jump[a][q] != jump[b][q]) {
+			a = jump[a][q];
+			b = jump[b][q];
+		}
+	}
+	return jump[a][0];
+}
+int dist(int a, int b)
+{
+	int c = lca(a,b);
+	return depth[a]+depth[b]-2*depth[c];
+}

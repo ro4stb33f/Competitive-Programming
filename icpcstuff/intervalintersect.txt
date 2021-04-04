@@ -1,0 +1,12 @@
+//1 if intersection, 0 otherwise
+pair<int,pair<ll,ll>> isect(ll a, ll b, ll c, ll d) {
+	if (a > c) {
+		swap(a,c);
+		swap(b,d);
+	}
+	if (c > b) {
+		return {0,{-1,-1}};
+	}
+	return {1,{c,min(b,d)}};
+}
+

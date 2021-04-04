@@ -1,0 +1,13 @@
+template <class T> inline void read(T& f) {
+    f = 0; T x = 1; char c = getchar();
+    while (c<'0'||c>'9') {if (c=='-') x=-1; c=getchar();}
+    while (c>='0'&&c<='9') {f=f*10+(c&15); c=getchar();}
+    f *= x;
+}
+template <class T, class... V> inline void read(T& t, V&... v) {read(t); read(v...);}
+template <class T> void print(T x, int c = -1) {
+    if (x < 0) putchar('-'), x = -x;
+    if (x < 10) putchar(x + 48);
+    else print(x / 10), putchar(x % 10 + 48);
+	if (c != -1) putchar(c);
+}

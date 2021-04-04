@@ -1,0 +1,19 @@
+struct MedianHeap {
+  priority_queue<int> lo, hi;
+  void Add(int elem) {
+    if (lo.empty() || elem <= lo.top()) {
+      lo.push(elem);
+      if (lo.size() > hi.size() + 1) {
+        hi.push(-lo.top());
+        lo.pop();
+      }
+    } else {
+      hi.push(-elem);
+      if (hi.size() >= lo.size() + 1) {
+        lo.push(-hi.top());
+        hi.pop();
+      }
+    }
+  }
+  int Get() { return lo.top(); }
+};

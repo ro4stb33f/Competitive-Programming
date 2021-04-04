@@ -1,0 +1,31 @@
+struct bipartite_dsu {
+	vector<int> sz, par, up, bipartite;
+	bipartite_dsu(int n) {
+		sz.resize(n+1,1);
+		par.resize(n+1);
+		up.resize(n+1);
+		bipartite.resize(n+1,1);
+		iota(par.begin(), par.end(), 0);
+	}
+	pair<int,int> root(int a) {
+		if (par[a] == a) return {a,0};
+		pair<int,int> tmp = root(par[a]);
+		tmp.second ^= up[a];
+		return tmp;
+	}
+	void unite(int a, int b) {
+		pair<int,int> aa = root(a), bb = root(b);
+		int parity = 1;
+		parity ^= aa.second;
+		parity ^= bb.second;
+		if (aa.first == bb.first) return;
+		if (sz[aa.first] > sz[bb.first]) swap(aa,bb);
+		sz[bb.first] += sz[aa.first];
+		par[aa.first] = bb.first;
+		up[aa.first] = parity;
+	}
+	bool is_bipartite(int a) {
+		pair<int,int> aa = root(a);
+		return bipartite[aa.first];
+	}
+};

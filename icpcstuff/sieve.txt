@@ -1,0 +1,30 @@
+int sieve[mx];
+void prepare_sieve() {
+	for (int q = 2; q < mx; q++) {
+		if (sieve[q]) continue;
+		for (int w = 1; q*w < mx; w++) {
+			if (sieve[q*w] == 0) sieve[q*w] = q;
+		}
+	}
+}
+
+int phi[mx];
+void prepare_phi() {
+	for (int q = 0; q < mx; q++) {
+		if (q & 1) phi[q] = q;
+		else phi[q] = q/2;
+	}
+	for (int q = 3; q < mx; q += 2) {
+		if (phi[i] == i) {
+			for (int w = q; w < mx; w += q) phi[w] -= phi[w]/q;
+		}
+	}
+}
+
+int mobius[mx];
+void prepare_mobius() {
+	mobius[1] = 1;
+	for (int q = 1; q < mx; q++) {
+		for (int w = 2*q; w < mx; w += q) mobius[w]-=mobius[q];
+	}
+}

@@ -1,0 +1,4 @@
+void uni(vector<ll> &a) {
+	sort(a.begin(), a.end());
+	a.resize(unique(a.begin(), a.end()) - a.begin());
+}

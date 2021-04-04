@@ -1,0 +1,38 @@
+template<int modd> struct modint {
+	static const int mod = modd;
+	int v; explicit operator int() const { return v;}
+	modint() : v(0) {}
+	modint(ll x) : v(int(x%mod)) {if (v < 0) v += mod;}
+	friend bool operator==(const modint& a, const modint& b) {return a.v == b.v;}
+	friend bool operator!=(const modint& a, const modint& b) {return a.v != b.v;}
+	friend bool operator<(const modint& a, const modint& b) {return a.v < b.v;}
+	modint& operator+=(const modint& a) {if ((v += a.v) >= mod) v -= mod; return *this;}
+	modint& operator-=(const modint& a) {if ((v -= a.v) < 0) v += mod; return *this;}
+	modint& operator*=(const modint& a) {v = int((ll)v*a.v%mod); return *this;}
+	modint& operator/=(const modint& a) {return (*this) *= inv(a);}
+	friend modint pow(modint a, ll p) {modint ret = 1; for (; p; p /= 2, a *= a){if (p&1) ret *= a;} return ret;}
+	friend modint inv(const modint& a) {return pow(a,mod-2);}
+	modint operator-() const {return modint(-v);}
+	modint& operator++() {return *this += 1;}
+	modint& operator--() {return *this -= 1;}
+	friend modint operator+(modint a, const modint& b) {return a += b;}
+	friend modint operator-(modint a, const modint& b) {return a -= b;}
+	friend modint operator*(modint a, const modint& b) {return a *= b;}
+	friend modint operator/(modint a, const modint& b) {return a /= b;}
+	friend ostream& operator<<(ostream& out, modint a) {return out << a.v;}
+	friend istream& operator>>(istream& in, modint& a) {ll b; in >> b; a.v = b; return in;}
+};
+using mint = modint<998244353>;
+
+const int mx = 6050;
+mint fact[mx], ifact[mx];
+void prepare_factorial() {
+	fact[0] = ifact[0] = 1;
+	for (int q = 1; q < mx; q++) {
+		fact[q] = fact[q-1]*q;
+		ifact[q] = inv(fact[q]);
+	}
+}
+mint choose(int a, int b) {
+	return fact[a]*ifact[b]*ifact[a-b];
+}

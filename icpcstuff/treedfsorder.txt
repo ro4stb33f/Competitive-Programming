@@ -1,0 +1,15 @@
+int tin[mx], tout[mx], par[mx], ttime = -1;
+void dfs_tin(int v, int p) {
+	tin[v] = ++ttime;
+	for (int a : adj[v]) {
+		if (a != p) {
+			par[a] = v;
+			dfs_tin(a,v);
+		}
+	}
+	tout[v] = ttime;
+}
+bool is_ancestor(int a, int b) { //true if a is ancestor of b 
+	if (tin[a] <= tin[b] && tout[b] <= tout[a]) return true;
+	return false;
+}

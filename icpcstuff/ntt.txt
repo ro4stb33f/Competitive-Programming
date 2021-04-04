@@ -1,0 +1,46 @@
+const ll md = (119<<23)+1, lg = 20, prim = 3; //998244353
+ll qpow(ll a, ll b) {
+	ll ret = 1;
+	for (; b > 0; a = (a*a)%md, b >>= 1) {
+		if (b&1) ret = (ret*a)%md;
+	}
+	return ret;
+}
+ll root = qpow(prim, (md-1)/lg);
+vector<ll> roots(1<<(lg+1),1);
+void ntt_prepare() {
+	for (int q = 2, w = 2; q <= lg; q++, w *= 2) {
+		ll po[] = {1, qpow(root, md >> q)};
+		for (int e = w; e < 2*w; e++) roots[e] = (roots[e/2] * po[e&1])%md;
+	}
+}
+void ntt(vector<ll> &a, bool invert) {
+	int n = SZ(a), l = 31 - __builtin_clz(n);
+	vector<int> v(n);
+	for (int q = 0; q < n; q++) v[q] = (v[q/2] | (q&1)<<l)/2;
+	for (int q = 0; q < n; q++) if (q < v[q]) swap(a[q], a[v[q]]);
+	for (int q = 1; q < n; q *= 2) {
+		for (int w = 0; w < n; w += 2*q) {
+			for (int e = 0; e < q; e++) {
+				ll x = a[w+e], y = (a[w+e+q] * ((invert && e) ? (md-roots[2*q-e]) : roots[q+e]))%md;
+				a[w+e] = x+y > md ? x+y-md : x+y;
+				a[w+e+q] = y > x ? x-y+md : x-y;
+			}
+		}
+	}
+	if (invert) {
+		ll inv = qpow((ll)n, md-2);
+		for (int q = 0; q < n; q++) a[q] = (a[q]*inv)%md;
+	}
+}
+vector<ll> mult(vector<ll> &a, vector<ll> &b) {
+	int n = 1;
+	while (n < SZ(a)+SZ(b)) n*=2;
+	vector<ll> x(a), y(b), ret(n);
+	x.resize(n); y.resize(n);
+	ntt(x, false); ntt(y, false);
+	for (int q = 0; q < n; q++) ret[q] = (x[q]*y[q])%md;
+	ntt(ret, true);
+	ret.resize(SZ(a)+SZ(b)-1);
+	return ret;
+}

@@ -1,0 +1,25 @@
+struct sparsetable {
+	typedef int T;
+	T base = INT_MAX;
+	int n,lg = 22;
+	T comb(T x, T y) {
+		return min(x,y);
+	}
+	vector<vector<T>> st;
+	void build(vector<T>& v) {
+		n = v.size();
+		st.resize(lg, vector<T>(n));
+		for (int q = 0; q < lg; q++) {
+			for (int w = 0; w < n; w++) {
+				st[q][w] = base;
+				if (w + (1<<q)-1 < n) {
+					st[q][w] = (q == 0 ? v[w] : comb(st[q-1][w], st[q-1][w+(1<<(q-1))]));
+				}
+			}
+		}
+	}
+	T get(int l, int r) {
+		int x = (l == r ? 0 : 31-__builtin_clz(r-l));
+		return comb(st[x][l], st[x][r-(1<<x)+1]);
+	}
+};

@@ -1,0 +1,17 @@
+struct dsu {
+	vector<int> fa, sz;
+	dsu(int n) : fa(n), sz(n,1) {
+		iota(fa.begin(), fa.end(), 0);
+	}
+	int root(int a) {
+		return (fa[a] == a ? a : fa[a] = root(fa[a]));
+	}
+	bool unite(int a, int b) {
+		int x = root(a), y = root(b);
+		if (x == y) return false;
+		if (sz[x] < sz[y]) swap(x,y);
+		sz[x]+=sz[y];
+		fa[y] = x;
+		return true;
+	}
+};
